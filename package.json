@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "axios": "^0.18.0",
     "history": "^4.7.2",
     "npm": "^6.13.4",
     "react": "^16.4.2",
@@ -22,6 +23,10 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
     "babel-loader": "^8.0.2",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "mongodb": "^3.1.10",
     "webpack": "^4.17.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.7"
@@ -29,7 +34,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack",
-    "dev": "webpack-dev-server --open"
+    "dev": "webpack-dev-server --open",
+    "test-connect": "babel-node src/server/connect-db",
+    "init-db": "babel-node src/server/init-db",
+    "server": "babel-node src/server/server",
+    "server-test": "babel-node src/server/server.spec",
+    "start-dev": "concurrently \"npm run server\" \"npm run dev\""
   },
   "author": "",
   "license": "ISC"
