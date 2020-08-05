@@ -5,7 +5,6 @@
   "main": "index.js",
   "dependencies": {
     "axios": "^0.18.0",
-    "babel-cli": "^6.26.0",
     "history": "^4.7.2",
     "md5": "^2.3.0",
     "npm": "^6.13.4",
@@ -37,15 +36,16 @@
   },
   "scripts": {
     "build": "webpack -p",
+    "deploy": "npm run build && git commit -a -m deployment && git push heroku master",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run server",
     "dev": "webpack-dev-server --open",
     "test-connect": "babel-node src/server/connect-db",
     "init-db": "babel-node src/server/init-db",
-    "server": "babel-node src/server/server",
+    "server": "cross-env NODE_ENV=production babel-node src/server",
     "server-test": "babel-node src/server/server.spec",
     "start-dev": "concurrently \"npm run server\" \"npm run dev\""
   },
-  "author": "",
+  "author": "michaelli",
   "license": "ISC"
 }
