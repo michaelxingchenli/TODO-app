@@ -5,8 +5,6 @@
   "main": "index.js",
   "dependencies": {
     "axios": "^0.18.0",
-    "cors": "^2.8.4",
-    "cross-env": "^5.2.0",
     "history": "^4.7.2",
     "md5": "^2.3.0",
     "npm": "^6.13.4",
@@ -29,6 +27,7 @@
     "babel-loader": "^8.0.2",
     "body-parser": "^1.18.3",
     "concurrently": "^4.0.1",
+    "cors": "^2.8.4",
     "express": "^4.16.3",
     "mongodb": "^3.1.10",
     "webpack": "^4.17.2",
@@ -43,7 +42,7 @@
     "dev": "webpack-dev-server --open",
     "test-connect": "babel-node src/server/connect-db",
     "init-db": "babel-node src/server/init-db",
-    "server": "cross-env NODE_ENV=production babel-node src/server",
+    "server": "babel-node src/server/server",
     "server-test": "babel-node src/server/server.spec",
     "start-dev": "concurrently \"npm run server\" \"npm run dev\""
   },
