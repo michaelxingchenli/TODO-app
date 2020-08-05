@@ -26,9 +26,9 @@ authenticationRoute(app);
 
 if (process.env.NODE_ENV == 'production') {
   app.use(express.static(path.resolve(__dirname, '../../dist')));
-  app.get('/*', (req, res=>{
+  app.get('/*', (req, res)=>{
     res.sendFile(path.resolve('index.html'));
-  }));
+  });
 }
 
 export const addNewTask = async task=>{
