@@ -2,19 +2,26 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { requestTaskCreation} from '../store/mutations'
 import { Link } from 'react-router-dom';
+import { Grid, Button, Typography, Card, CardContent, List, ListItem, ListItemText } from '@material-ui/core';
 
 export const TaskList = ({tasks, name, id, createNewTask}) => (
-    <div>
-        <h3>{name}</h3>
-        <div>             
-            {tasks.map(task=>(
-                <Link key={task.id} to={`/task/${task.id}`}>
-                    <div>{task.name}</div>
-                </Link>
-            ))}
-        </div>
-        <button onClick={ ()=>createNewTask(id)}>Add New</button>
-    </div>    
+    <Grid container item xs={4} spacing={3} direction="column">
+        <Card variant="outlined">
+            <CardContent>
+                <h3>{name}</h3>
+                <List>             
+                    {tasks.map(task=>(
+                        <ListItem>
+                            <Link key={task.id} to={`/task/${task.id}`}>
+                                <ListItemText primary={task.name} />
+                            </Link>
+                        </ListItem>
+                    ))}
+                </List>
+                <Button variant="contained" color="primary" onClick={ ()=>createNewTask(id)}>Add New</Button>
+            </CardContent>
+        </Card>
+    </Grid>    
 )
 
 const mapStateToProps = (state, ownProps) => {

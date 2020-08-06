@@ -1,19 +1,75 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as mutations from '../store/mutations'
+import { Container, TextField, Button, Grid, Link } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles'
+const useStyles = makeStyles((theme) => ({
+  container: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
 
 const LoginComponent = ({authenticateUser, authenticated}) => {
+  const classes = useStyles();
+
   return (
-    <div>
-      <h2>Please Login</h2>
-      <form onSubmit={authenticateUser}>
-        <input type="text" name="username" placeholder="username" defaultValue="Dev"/>
-        <input type="text" name="password" placeholder="password"/>
+    <Container className={classes.container} maxWidth="xs">
+      <h2 className="MuiTypography-h3">Please Login</h2>
+      <form className={classes.form} onSubmit={authenticateUser}>
+        <TextField 
+          variant="outlined" 
+          margin="normal"
+          fullWidth
+          label="Username" 
+          name="username" 
+          placeholder="username" 
+          defaultValue="Dev"
+          autoFocus
+          required />
+        <TextField 
+          variant="outlined" 
+          margin="normal" 
+          fullWidth
+          label="Password"
+          name="password" 
+          placeholder="password"
+          required />
         {authenticated === mutations.NOT_AUTHENTICATED ? <p> Login incorrect</p> : null
         }
-        <button type="submit" className="login">Login </button>
+        <Button 
+          variant="outlined" 
+          color="primary" 
+          type="submit"  
+          className= {classes.submit}
+          fullWidth >Login </Button>
+        <Grid container>
+            <Grid item xs>
+              <Link href="#" variant="body2">
+                Forgot password?
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link href="#" variant="body2">
+                {"Don't have an account? Sign Up"}
+              </Link>
+            </Grid>
+          </Grid>
       </form>
-    </div>
+    </Container>
   )
 };
 
