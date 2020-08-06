@@ -27,7 +27,7 @@ export function* taskCreationSaga() {
           name: "New task"
         }
       });
-      console.log("Got response", res);
+      //console.log("Got response", res);
   }
 } 
 
@@ -38,17 +38,14 @@ export function* taskModificationSaga() {
       mutations.SET_TASK_NAME,
       mutations.SET_TASK_COMPLETE
     ]);
-    console.log('should post update', task);
-    const { res } =  axios.post(url + `/task/update`, {
+    axios.post(url + `/task/update`, {
       task: {
-        id: task.id,
+        id: task.taskID,
         group: task.groupID,
         name: task.name,
         isComplete: task.isComplete
-
       }
     });
-    console.log("Got response", res);
   }
 }
 

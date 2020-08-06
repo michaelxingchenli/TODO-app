@@ -1,11 +1,14 @@
+import { MongoClient } from 'mongodb';
+import path from 'path';
+
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser'
+
 import { connnectDB, connectDB } from './connect-db'
 import './init-db'
 import { authenticateRoute, authenticationRoute } from './authenticate'
 
-import path from 'path';
 let port = process.env.PORT || 8888;
 let app = express();
 
@@ -42,7 +45,9 @@ export const updateTask = async task => {
   let db = await connectDB();
   let collection = db.collection('tasks');
   if (group) {
-    await collection.updateOne({id}, {$set: {group}});
+    await collection.updateOne(
+      {id}, {$set: {group}}
+    );
   }
   if (name) {
     await collection.updateOne({id}, {$set: {name}});
