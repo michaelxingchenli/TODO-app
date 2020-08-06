@@ -8,11 +8,11 @@ export const TaskList = ({tasks, name, id, createNewTask}) => (
     <Grid container item xs={4} spacing={3} direction="column">
         <Card variant="outlined">
             <CardContent>
-                <h3>{name}</h3>
+                <h3>{name}</h3>                
                 <List>             
                     {tasks.map(task=>(
-                        <ListItem>
-                            <Link key={task.id} to={`/task/${task.id}`}>
+                        <ListItem key={task.id}>
+                            <Link to={`/task/${task.id}`}>
                                 <ListItemText primary={task.name} />
                             </Link>
                         </ListItem>

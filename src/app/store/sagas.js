@@ -38,8 +38,8 @@ export function* taskModificationSaga() {
       mutations.SET_TASK_NAME,
       mutations.SET_TASK_COMPLETE
     ]);
-
-    axios.post(url + `/task/update`, {
+    console.log('should post update', task);
+    const { res } =  axios.post(url + `/task/update`, {
       task: {
         id: task.id,
         group: task.groupID,
@@ -47,7 +47,8 @@ export function* taskModificationSaga() {
         isComplete: task.isComplete
 
       }
-    })
+    });
+    console.log("Got response", res);
   }
 }
 

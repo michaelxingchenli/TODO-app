@@ -3,6 +3,18 @@ import { connect } from 'react-redux';
 import {Link} from 'react-router-dom'
 import * as mutations from '../store/mutations'
 
+import { makeStyles } from '@material-ui/core/styles';
+import { Grid, Button, TextField, Input, MenuItem, Typography, Card, CardContent, List, ListItem, ListItemText } from '@material-ui/core';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& .MuiTextField-root': {
+      margin: theme.spacing(1),
+      width: '25ch',
+    },
+  },
+}));
+
 const TaskDetail = ({
   id,
   comments,
@@ -12,22 +24,45 @@ const TaskDetail = ({
   setTaskCompletion,
   setTaskName,
   setTaskGroup
-}) => (
-  <div>
+}) => {
+  const classes = useStyles();
+
+  return (
     <div>
-      <input onChange={setTaskName} value={task.name}/>
+      <div>
+        <Input 
+          onChange={setTaskName} 
+          value={task.name}
+          variant="outlined" 
+          fullWidth
+        />
+       
+      </div>
+      <Button 
+        variant="contained" 
+        color={isComplete ? "default" : "primary"}
+        onClick={()=> setTaskCompletion(id,  !isComplete)}>
+          {isComplete ? 'Reopen': 'Complete'}
+      </Button>
+  
+      <TextField
+        select
+        label="Select"
+        value={task.group}
+        onChange={setTaskGroup}
+        variant="outlined"
+      >
+        {groups.map(group=>(
+          <MenuItem key={group.id} value={group.id}>{group.name}</MenuItem>
+        ))}
+      </TextField>
+  
+      <Link to="/dashboard">
+        <Button variant="contained" color="primary">Done </Button>
+      </Link>
     </div>
-    <button onClick={()=> setTaskCompletion(id,  !isComplete)}>{isComplete ? 'Reopen': 'Complete'}</button>
-    <select onChange={setTaskGroup} value={task.group}>
-      {groups.map(group=>(
-        <option key={group.id} value={group.id}>{group.name}</option>
-      ))}
-    </select>
-    <Link to="/dashboard">
-      <button>Done </button>
-    </Link>
-  </div>
-)
+  )
+}
 
 const mapStateToProps = (state, ownProps) => {
   let id = ownProps.match.params.id;
