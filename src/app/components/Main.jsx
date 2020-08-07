@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import { store } from '../store';
-import { ConnectedDashboard } from './Dashboard';
 import { Redirect, Router, Route } from 'react-router-dom';
+
+import { store } from '../store';
 import { history } from '../store/history';
+import { ConnectedDashboard } from './Dashboard';
 import { ConnectedNavigation } from './Navigation';
-import { ConnectTaskDetail } from './TaskDetail';
+import { ConnectedTaskDetail } from './TaskDetail';
 import { ConnectedLogin } from './Login'
 
 const RouteGuard = Component => ({match}) => {
@@ -31,7 +32,7 @@ export const Main = () => (
                 <Route
                     exact
                     path="/task/:id"
-                    render={RouteGuard(ConnectTaskDetail) }
+                    render={RouteGuard(ConnectedTaskDetail) }
                 />
                 <Route
                     exact

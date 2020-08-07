@@ -6,7 +6,7 @@ import {
 
 import uuid from 'uuid';
 import axios from 'axios';
-import * as mutations from './mutations';
+import * as actions from './actions';
 import { history } from './history';
 
 const url = process.env.NODE_ENV == 'production' ? '' : "http://localhost:8888";
@@ -14,10 +14,10 @@ const url = process.env.NODE_ENV == 'production' ? '' : "http://localhost:8888";
 
 export function* taskCreationSaga() {
   while (true) {
-      const { groupID } = yield take(mutations.REQUEST_TASK_CREATION);
+      const { groupID } = yield take(actions.REQUEST_TASK_CREATION);
       const ownerID = `U1`;
       const taskID = uuid();
-      yield put(mutations.createTask(taskID, groupID, ownerID));
+      yield put(actions.createTask(taskID, groupID, ownerID));
       const { res } = yield axios.post(url + `/task/new`, {
         task: {
           id: taskID,
@@ -29,14 +29,24 @@ export function* taskCreationSaga() {
       });
       //console.log("Got response", res);
   }
-} 
+}
+
+export function* commentCreationSaga() {
+  while(true) {
+    const comment = yield take (actions.ADD_TASK_COMMENT)
+    const { res } = yield axios.post(url + `/comment/new`, {
+      comment
+    });
+
+  }
+}
 
 export function* taskModificationSaga() {
   while (true) {
     const task = yield take([
-      mutations.SET_TASK_GROUP,
-      mutations.SET_TASK_NAME,
-      mutations.SET_TASK_COMPLETE
+      actions.SET_TASK_GROUP,
+      actions.SET_TASK_NAME,
+      actions.SET_TASK_COMPLETE
     ]);
     axios.post(url + `/task/update`, {
       task: {
@@ -51,7 +61,7 @@ export function* taskModificationSaga() {
 
 export function* userAuthenticationSaga() {
   while(true) {
-    const {username, password} = yield take(mutations.REQUEST_AUTHENTICATE_USER);
+    const {username, password} = yield take(actions.REQUEST_AUTHENTICATE_USER);
     try {
       const { data } = yield axios.post(url + '/authenticate', {username, password});
       if (!data) {
@@ -59,13 +69,13 @@ export function* userAuthenticationSaga() {
       }
       
       console.log('authenticated!', data);
-      yield put(mutations.setState(data.state));
-      yield put(mutations.processAuthenticateUser(mutations.AUTHENTICATED));
+      yield put(actions.setState(data.state));
+      yield put(actions.processAuthenticateUser(actions.AUTHENTICATED));
       history.push('/dashboard');
    
     } catch (e) {
       console.log("Can't authenticate");
-      yield put(mutations.processAuthenticateUser(mutations.NOT_AUTHENTICATED));
+      yield put(actions.processAuthenticateUser(actions.NOT_AUTHENTICATED));
       
     }
 

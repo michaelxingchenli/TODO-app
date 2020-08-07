@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { ConnectedTaskList} from './TaskList';
+
 import { makeStyles, Typography, Grid } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { requestTaskCreation} from '../store/mutations'
+import { requestTaskCreation } from '../store/actions'
 import { Link } from 'react-router-dom';
 import { Grid, Button, Typography, Card, CardContent, List, ListItem, ListItemText } from '@material-ui/core';
 

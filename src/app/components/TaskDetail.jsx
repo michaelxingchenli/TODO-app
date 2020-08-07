@@ -1,7 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {Link} from 'react-router-dom'
-import * as mutations from '../store/mutations'
+import uuid from 'uuid'
+
+import * as actions from '../store/actions'
+import {ConnectedUsername} from './Username'
 
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Button, TextField, Input, MenuItem, Typography, Card, CardContent, List, ListItem, ListItemText } from '@material-ui/core';
@@ -19,35 +22,58 @@ const TaskDetail = ({
   id,
   comments,
   task,
-  isComplete,
   groups,
+  isOwner,
+  isComplete,
+  sessionID,  
+
   setTaskCompletion,
   setTaskName,
-  setTaskGroup
+  setTaskGroup,
+  addTaskComment
 }) => {
   const classes = useStyles();
 
   return (
     <div>
-      <div>
-        <Input 
-          onChange={setTaskName} 
-          value={task.name}
-          variant="outlined" 
-          fullWidth
-        />
-       
-      </div>
-      <Button 
-        variant="contained" 
-        color={isComplete ? "default" : "primary"}
-        onClick={()=> setTaskCompletion(id,  !isComplete)}>
-          {isComplete ? 'Reopen': 'Complete'}
-      </Button>
+      {isOwner ?
+        (<div>
+          <Input 
+            onChange={setTaskName} 
+            value={task.name}
+            variant="outlined" 
+            fullWidth
+          /> 
+        </div>) 
+        :
+        (<h3> {task.name}  {isComplete ? '✓' : null}</h3>)
+      }
+
+      {isOwner ? 
+        <div>
+          you are the owner of this task.
+          <Button 
+            variant="contained" 
+            color={isComplete ? "default" : "primary"}
+            onClick={()=> setTaskCompletion(id,  !isComplete)}>
+              {isComplete ? 'Reopen': 'Complete'}
+          </Button>
+        </div>
+        : 
+      <div><ConnectedUsername id={task.owner}/> is the owner of this task.</div>
+      }
   
+      <div className="comments">
+          {comments.map(comment=>(
+              <div key={comment.id}>
+                  <ConnectedUsername id={comment.owner}/> : {comment.content}
+              </div>
+          ))}
+      </div>
+
       <TextField
         select
-        label="Select"
+        label="Update group"
         value={task.group}
         onChange={setTaskGroup}
         variant="outlined"
@@ -56,6 +82,18 @@ const TaskDetail = ({
           <MenuItem key={group.id} value={group.id}>{group.name}</MenuItem>
         ))}
       </TextField>
+  
+      <form className="form-inline" onSubmit={(e)=>addTaskComment(id,sessionID,e)}>
+          <input type="text" name="commentContents" autoComplete="off" placeholder="Add a comment" className="form-control"/>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            type="submit" 
+            className="btn">
+              Submit
+          </Button>
+      </form>
+
   
       <Link to="/dashboard">
         <Button variant="contained" color="primary">Done </Button>
@@ -67,29 +105,46 @@ const TaskDetail = ({
 const mapStateToProps = (state, ownProps) => {
   let id = ownProps.match.params.id;
   let task = state.tasks.find(task=>task.id === id);
+  let comments= state.comments.filter(comment=>comment.task === id);
+  let isOwner = state.session.id === task.owner;
   let groups = state.groups;
+
   return {
     id,
-    task,
-    groups,
-    isComplete: task.isComplete
+    comments,
+    task,    
+    groups,    
+    isOwner,
+    isComplete: task.isComplete,
+    sessionID: state.session.id
   } 
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const id = ownProps.match.params.id;
+  
   return {
     setTaskCompletion(id, isComplete) {
-      dispatch(mutations.setTaskCompletion(id, isComplete))
+      dispatch(actions.setTaskCompletion(id, isComplete))
     },
     setTaskGroup(e) {
-      dispatch(mutations.setTaskGroup(id, e.target.value))
+      dispatch(actions.setTaskGroup(id, e.target.value))
     },
     setTaskName(e) {
-      dispatch(mutations.setTaskName(id, e.target.value))
+      dispatch(actions.setTaskName(id, e.target.value))
+    },
+    addTaskComment(taskID, ownerID, e) {
+      e.preventDefault();
+      let input = e.target['commentContents'];
+      let commentID = uuid();
+      let content = input.value;
+      if (content !== '') {
+        input.value = '';
+        dispatch(actions.addTaskComment(commentID, taskID, ownerID, content));
+      }      
     }
   }
 }
 
-export const ConnectTaskDetail = connect(mapStateToProps, mapDispatchToProps) (TaskDetail)
+export const ConnectedTaskDetail = connect(mapStateToProps, mapDispatchToProps) (TaskDetail)
 
