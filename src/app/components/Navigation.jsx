@@ -4,11 +4,11 @@ import React from 'react';
 import { ConnectedUsername } from './Username'
 import * as actions from '../store/actions'
 
-import Typography from '@material-ui/core/Typography';
+import {Typography, Container} from '@material-ui/core';
 
 
 const Navigation = ({id, authenticated}) => (
-    <div>
+    <Container>
         <Link to="/dashboard">
         <Typography component="h2" variant="h6" color="primary" gutterBottom>
             TODO
@@ -20,7 +20,7 @@ const Navigation = ({id, authenticated}) => (
             Welcome, <ConnectedUsername id={id} />
         </h3>)
             : null }
-    </div>
+    </Container>
 );
 
 const mapStateToProps = ({session})=>({

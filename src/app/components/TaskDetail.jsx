@@ -7,7 +7,7 @@ import * as actions from '../store/actions'
 import {ConnectedUsername} from './Username'
 
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Button, TextField, Input, MenuItem, Typography, Card, CardContent, List, ListItem, ListItemText } from '@material-ui/core';
+import { Button, TextField, Input, MenuItem, Typography, Container } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,6 +16,13 @@ const useStyles = makeStyles((theme) => ({
       width: '25ch',
     },
   },
+  container: {
+    padding: theme.spacing(2),
+  },
+  control: {
+    padding: theme.spacing(3),
+  }
+  
 }));
 
 const TaskDetail = ({
@@ -35,7 +42,37 @@ const TaskDetail = ({
   const classes = useStyles();
 
   return (
-    <div>
+    <Container className={classes.container}>
+      <div className={classes.control}>
+        {isOwner ? 
+          <span>
+            you are the owner of this task.
+            
+            <Button 
+              variant="contained" 
+              color={isComplete ? "default" : "primary"}
+              onClick={()=> setTaskCompletion(id,  !isComplete)}>
+                {isComplete ? 'Reopen': 'Complete'}
+            </Button>
+          </span>
+          : 
+        <span><ConnectedUsername id={task.owner}/> is the owner of this task.</span>
+        }
+
+
+        <TextField
+        select
+        label="group"
+        value={task.group}
+        onChange={setTaskGroup}
+        variant="outlined"
+      >
+        {groups.map(group=>(
+          <MenuItem key={group.id} value={group.id}>{group.name}</MenuItem>
+        ))}
+      </TextField>
+      </div>
+      
       {isOwner ?
         (<div>
           <Input 
@@ -49,56 +86,31 @@ const TaskDetail = ({
         (<h3> {task.name}  {isComplete ? '✓' : null}</h3>)
       }
 
-      {isOwner ? 
-        <div>
-          you are the owner of this task.
-          <Button 
-            variant="contained" 
-            color={isComplete ? "default" : "primary"}
-            onClick={()=> setTaskCompletion(id,  !isComplete)}>
-              {isComplete ? 'Reopen': 'Complete'}
-          </Button>
-        </div>
-        : 
-      <div><ConnectedUsername id={task.owner}/> is the owner of this task.</div>
-      }
-  
       <div className="comments">
-          {comments.map(comment=>(
-              <div key={comment.id}>
-                  <ConnectedUsername id={comment.owner}/> : {comment.content}
-              </div>
-          ))}
+        <h4 className="title">Comments</h4>
+        {comments.map(comment=>(
+            <div key={comment.id}>
+                <h4><ConnectedUsername id={comment.owner}/> : </h4>
+                <p>{comment.content}</p>
+            </div>
+        ))}      
+  
+        <form className="form-inline" onSubmit={(e)=>addTaskComment(id,sessionID,e)}>
+            <Input type="text" name="commentContents" autoComplete="off" placeholder="Add a comment" className="form-control"/>
+            <Button 
+              variant="outlined" 
+              color="primary" 
+              type="submit" 
+              className="btn">
+                Comment
+            </Button>
+        </form>
       </div>
 
-      <TextField
-        select
-        label="Update group"
-        value={task.group}
-        onChange={setTaskGroup}
-        variant="outlined"
-      >
-        {groups.map(group=>(
-          <MenuItem key={group.id} value={group.id}>{group.name}</MenuItem>
-        ))}
-      </TextField>
-  
-      <form className="form-inline" onSubmit={(e)=>addTaskComment(id,sessionID,e)}>
-          <input type="text" name="commentContents" autoComplete="off" placeholder="Add a comment" className="form-control"/>
-          <Button 
-            variant="contained" 
-            color="primary" 
-            type="submit" 
-            className="btn">
-              Submit
-          </Button>
-      </form>
-
-  
       <Link to="/dashboard">
         <Button variant="contained" color="primary">Done </Button>
       </Link>
-    </div>
+    </Container>
   )
 }
 
