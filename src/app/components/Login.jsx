@@ -1,8 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as mutations from '../store/mutations'
+
+import * as actions from '../store/actions'
+
 import { Container, TextField, Button, Grid, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
+
 const useStyles = makeStyles((theme) => ({
   container: {
     marginTop: theme.spacing(8),
@@ -48,7 +51,7 @@ const LoginComponent = ({authenticateUser, authenticated}) => {
           name="password" 
           placeholder="password"
           required />
-        {authenticated === mutations.NOT_AUTHENTICATED ? <p> Login incorrect</p> : null
+        {authenticated === actions.NOT_AUTHENTICATED ? <p> Login incorrect</p> : null
         }
         <Button 
           variant="outlined" 
@@ -83,7 +86,7 @@ const mapDispatchToProps = (dispatch)=> {
       e.preventDefault();
       let username = e.target['username'].value;
       let password = e.target['password'].value;
-      dispatch(mutations.requestAuthenticateUser(username, password)); 
+      dispatch(actions.requestAuthenticateUser(username, password)); 
     }
   });
 }

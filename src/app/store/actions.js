@@ -9,6 +9,7 @@ export const AUTHENTICATED = 'AUTHENTICATED';
 export const AUTHENTICATING = 'AUTHENTICATING';
 export const NOT_AUTHENTICATED = 'NOT_AUTHENTICATED';
 export const SET_STATE = 'SET_STATE';
+export const ADD_TASK_COMMENT = 'ADD_TASK_COMMENT';
 
 export const requestTaskCreation = (groupID)=>({
     type:REQUEST_TASK_CREATION,
@@ -21,6 +22,14 @@ export const createTask = (taskID, groupID, ownerID)=> ({
     groupID,
     ownerID
 });
+
+export const addTaskComment = (commentID, taskID, ownerID, content) => ({
+    type: ADD_TASK_COMMENT,
+    id: commentID,
+    task: taskID,
+    owner: ownerID,
+    content
+})
 
 export const setTaskCompletion = (id, isComplete) => ({
     type: SET_TASK_COMPLETE,

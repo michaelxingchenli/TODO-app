@@ -9,11 +9,18 @@ async function assembleUserState(user) {
 
   let tasks = await db.collection(`tasks`).find({owner:user.id}).toArray();
   let groups = await db.collection(`groups`).find({owner:user.id}).toArray();
+  let comments = await db.collection(`comments`).find({owner:user.id}).toArray();
+  let users = [
+    await db.collection(`users`).findOne({id:user.id}),
+    ...await db.collection(`users`).find({id:{$in:[...tasks,comments].map(x=>x.owner)}}).toArray()
+];
 
   return {
     tasks,
     groups,
-    session: {authenticated:`AUTHENTICATED`, id: user.id}
+    session: {authenticated:`AUTHENTICATED`, id: user.id},
+    comments,
+    users
   }
 }
 

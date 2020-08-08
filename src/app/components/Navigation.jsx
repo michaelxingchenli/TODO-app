@@ -1,16 +1,31 @@
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
+import { ConnectedUsername } from './Username'
+import * as actions from '../store/actions'
 
-const Navigation = () => (
-    <div>
+import {Typography, Container} from '@material-ui/core';
+
+
+const Navigation = ({id, authenticated}) => (
+    <Container>
         <Link to="/dashboard">
         <Typography component="h2" variant="h6" color="primary" gutterBottom>
             TODO
         </Typography>
         </Link>
-    </div>
+
+        { authenticated ? 
+        (<h3>
+            Welcome, <ConnectedUsername id={id} />
+        </h3>)
+            : null }
+    </Container>
 );
 
-export const ConnectedNavigation = connect (state=>state) (Navigation);
+const mapStateToProps = ({session})=>({
+    id:session.id,
+    authenticated:session.authenticated == actions.AUTHENTICATED
+});
+
+export const ConnectedNavigation = connect (mapStateToProps) (Navigation);
