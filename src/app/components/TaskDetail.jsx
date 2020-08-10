@@ -7,7 +7,7 @@ import * as actions from '../store/actions'
 import {ConnectedUsername} from './Username'
 
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, TextField, Input, MenuItem, Typography, Container } from '@material-ui/core';
+import { Divider, AppBar, Toolbar, Button, TextField, Input, InputLabel, Select, MenuItem, Typography, Container, FormControl } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,14 +15,29 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       width: '25ch',
     },
-  },
+  }, 
+
   container: {
     padding: theme.spacing(2),
   },
-  control: {
-    padding: theme.spacing(3),
-  }
   
+  control: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  
+  title: {
+    flexGrow: 1,
+  },
+
+  comments: {
+    background: '#f5f6f5',
+  },
+  
+  back: {
+    float: 'right',
+  }
 }));
 
 const TaskDetail = ({
@@ -42,78 +57,99 @@ const TaskDetail = ({
   const classes = useStyles();
 
   return (
-    <Container className={classes.container}>
-      <div className={classes.control}>
-        {isOwner ? 
-          <span>
-            you are the owner of this task.
-            
-            <Button 
-              variant="contained" 
-              color={isComplete ? "default" : "primary"}
-              onClick={()=> setTaskCompletion(id,  !isComplete)}>
-                {isComplete ? 'Reopen': 'Complete'}
-            </Button>
-          </span>
-          : 
-        <span><ConnectedUsername id={task.owner}/> is the owner of this task.</span>
-        }
+    <div>
+      <Divider />
+      <Container className={classes.container}>
+        <div className={classes.control}>
+            {isOwner ? 
+                <Typography variant="h6" className={classes.title}>
+                  you are the owner of this task.
+                </Typography>
+                : 
+              <span><ConnectedUsername id={task.owner}/> is the owner of this task.</span>
+            }
 
-
-        <TextField
-        select
-        label="group"
-        value={task.group}
-        onChange={setTaskGroup}
-        variant="outlined"
-      >
-        {groups.map(group=>(
-          <MenuItem key={group.id} value={group.id}>{group.name}</MenuItem>
-        ))}
-      </TextField>
-      </div>
+            {
+              isOwner ?
+                <React.Fragment>
+                  <Button 
+                    size="medium"
+                    variant="outlined" 
+                    color={isComplete ? "default" : "inherit"}
+                    onClick={()=> setTaskCompletion(id,  !isComplete)}>
+                      {isComplete ? 'Reopen': 'Complete'}
+                  </Button>
+                  <TextField
+                    select
+                    label="group"
+                    color="inherit"
+                    value={task.group}
+                    onChange={setTaskGroup}
+                    variant="outlined"
+                  >
+                  {groups.map(group=>(
+                    <MenuItem key={group.id} value={group.id}>{group.name}</MenuItem>
+                  ))}
+                  </TextField>
+                </React.Fragment>
+                :
+                null
+              }
+        </div>
+      </Container>
       
-      {isOwner ?
-        (<div>
-          <Input 
-            onChange={setTaskName} 
-            value={task.name}
-            variant="outlined" 
-            fullWidth
-          /> 
-        </div>) 
-        :
-        (<h3> {task.name}  {isComplete ? '✓' : null}</h3>)
-      }
-
-      <div className="comments">
-        <h4 className="title">Comments</h4>
-        {comments.map(comment=>(
-            <div key={comment.id}>
-                <h4><ConnectedUsername id={comment.owner}/> : </h4>
-                <p>{comment.content}</p>
-            </div>
-        ))}      
-  
-        <form className="form-inline" onSubmit={(e)=>addTaskComment(id,sessionID,e)}>
-            <Input type="text" name="commentContents" autoComplete="off" placeholder="Add a comment" className="form-control"/>
-            <Button 
+      <Divider />
+      <Container className={classes.container}>
+        {isOwner ?
+          (<div>
+            <h3 className="title">Task</h3>
+            <Input 
+              onChange={setTaskName} 
+              value={task.name}
               variant="outlined" 
-              color="primary" 
-              type="submit" 
-              className="btn">
-                Comment
-            </Button>
-        </form>
+              fullWidth
+            /> 
+          </div>) 
+          :
+          (<h3> {task.name}  {isComplete ? '✓' : null}</h3>)
+        }
+      </Container>
+
+
+      <div className={classes.comments}>
+        <Divider />
+        <Container className={classes.container}>
+          <h3 className="title">Conversation</h3>
+          {comments.map(comment=>(
+              <div key={comment.id}>
+                  <h4><ConnectedUsername id={comment.owner}/> : </h4>
+                  <p>{comment.content}</p>
+              </div>
+          ))}      
+    
+          <form className="form-inline" onSubmit={(e)=>addTaskComment(id,sessionID,e)}>
+              <Input type="text" name="commentContents" autoComplete="off" placeholder="Add a comment" className="form-control"/>
+              <Button 
+                variant="outlined" 
+                color="primary" 
+                type="submit" 
+                className="btn">
+                  Comment
+              </Button>
+          </form>         
+        </Container>
       </div>
 
-      <Link to="/dashboard">
-        <Button variant="contained" color="primary">Done </Button>
-      </Link>
-    </Container>
+      <Divider />
+      <Container className={classes.container}>
+        <Link to="/dashboard" className={classes.back}>
+          <Button variant="contained" color="primary" >Back</Button>
+        </Link>
+      </Container>
+    </div>
   )
 }
-
+//<Container className={classes.container}></Container>
 const mapStateToProps = (state, ownProps) => {
   let id = ownProps.match.params.id;
   let task = state.tasks.find(task=>task.id === id);

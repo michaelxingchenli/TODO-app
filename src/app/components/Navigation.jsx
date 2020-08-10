@@ -16,9 +16,9 @@ const Navigation = ({id, authenticated}) => (
         </Link>
 
         { authenticated ? 
-        (<h3>
+        (<Typography component="h3" variant="h6" color="primary" gutterBottom>
             Welcome, <ConnectedUsername id={id} />
-        </h3>)
+        </Typography>)
             : null }
     </Container>
 );

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Grid, Button, Typography, Card, CardContent, List, ListItem, ListItemText } from '@material-ui/core';
 
 export const TaskList = ({tasks, name, id, createNewTask}) => (
-    <Grid container item xs={4} spacing={3} direction="column">
+    <Grid container item xs={12} sm={6} md={4} spacing={3} direction="column">
         <Card variant="outlined">
             <CardContent>
                 <h3>{name}</h3>                
