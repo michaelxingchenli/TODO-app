@@ -5,9 +5,9 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser'
 
-import { connnectDB, connectDB } from './connect-db'
 import './init-db'
-import { authenticateRoute, authenticationRoute } from './authenticate'
+import { addNewTask, updateTask, addNewComment } from './utility'
+import { authenticationRoute } from './authenticate'
 
 let port = process.env.PORT || 8888;
 let app = express();
@@ -32,35 +32,6 @@ if (process.env.NODE_ENV == 'production') {
   app.get('/*', (req, res)=>{
     res.sendFile(path.resolve('index.html'));
   });
-}
-
-export const addNewTask = async task=>{
-  let db = await connectDB();
-  let collection = db.collection('tasks');
-  await collection.insertOne(task);
-}
-
-export const addNewComment = async comment => {
-  let db = await connectDB();
-  let collection = db.collection('comments');
-  await collection.insertOne(comment);
-}
-
-export const updateTask = async task => {
-  let { id, group, isComplete, name } = task;
-  let db = await connectDB();
-  let collection = db.collection('tasks');
-  if (group) {
-    await collection.updateOne(
-      {id}, {$set: {group}}
-    );
-  }
-  if (name) {
-    await collection.updateOne({id}, {$set: {name}});
-  }
-  if (isComplete !== undefined) {
-    await collection.updateOne({id}, {$set: {isComplete}});
-  }
 }
 
 app.post('/task/new', async (req, res)=> {

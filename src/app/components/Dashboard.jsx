@@ -27,7 +27,7 @@ export const Dashboard = ({groups}) => {
 
             <Grid className={classes.body} container spacing={5} direction="row">
                 {groups.map(group=>(
-                    <ConnectedTaskList key={group.id} id={group.id} name={group.name} />
+                    <ConnectedTaskList key={group.id} groupID={group.id} ownerID={group.owner} name={group.name} />
                 ))}
             </Grid>
         </Container>

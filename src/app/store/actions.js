@@ -10,10 +10,13 @@ export const AUTHENTICATING = 'AUTHENTICATING';
 export const NOT_AUTHENTICATED = 'NOT_AUTHENTICATED';
 export const SET_STATE = 'SET_STATE';
 export const ADD_TASK_COMMENT = 'ADD_TASK_COMMENT';
+export const USERNAME_RESERVED = `USERNAME_RESERVED`;
+export const REQUEST_CREATE_USER = `REQUEST_CREATE_USER`;
 
-export const requestTaskCreation = (groupID)=>({
+export const requestTaskCreation = (groupID, ownerID)=>({
     type:REQUEST_TASK_CREATION,
-    groupID
+    groupID,
+    ownerID
 });
 
 export const createTask = (taskID, groupID, ownerID)=> ({
@@ -65,3 +68,9 @@ export const setState = (state = {}) => ({
     type: SET_STATE,
     state
 }); 
+
+export const requestCreateUser = (username,password)=>({
+    type:REQUEST_CREATE_USER,
+    username,
+    password
+});

@@ -8,6 +8,7 @@ import { ConnectedDashboard } from './Dashboard';
 import { ConnectedNavigation } from './Navigation';
 import { ConnectedTaskDetail } from './TaskDetail';
 import { ConnectedLogin } from './Login'
+import { ConnectedSignup } from './Signup'
 
 const RouteGuard = Component => ({match}) => {
     console.info("Route Guard ", match);
@@ -38,6 +39,11 @@ export const Main = () => (
                     exact
                     path="/"
                     component={ConnectedLogin}
+                />
+                <Route 
+                    exact 
+                    path="/signup" 
+                    component={ConnectedSignup}
                 />
             </div>
         </Provider>

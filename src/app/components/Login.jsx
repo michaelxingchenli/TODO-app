@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
+import { Link } from 'react-router-dom';
 import * as actions from '../store/actions'
 
-import { Container, TextField, Button, Grid, Link } from '@material-ui/core';
+import { Container, TextField, Button, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
@@ -60,13 +60,8 @@ const LoginComponent = ({authenticateUser, authenticated}) => {
           className= {classes.submit}
           fullWidth >Login </Button>
         <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link to="/signup">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

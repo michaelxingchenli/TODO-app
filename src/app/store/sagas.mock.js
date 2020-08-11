@@ -17,3 +17,15 @@ export function* taskCreationSaga() {
     }
 }
 
+export function* userAuthenticationSaga(){
+    while (true){
+        const {username,password} = yield take(mutations.REQUEST_AUTHENTICATE_USER);
+        yield delay(250);
+        yield put(mutations.processAuthenticateUser(mutations.AUTHENTICATED, {
+            id:"U1",
+            token:"ABCD-1234",
+        }));
+
+        history.push(`/dashboard`)
+    }
+}

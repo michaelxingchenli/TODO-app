@@ -15,7 +15,7 @@ const url = process.env.NODE_ENV == 'production' ? '' : "http://localhost:8888";
 export function* taskCreationSaga() {
   while (true) {
       const { groupID } = yield take(actions.REQUEST_TASK_CREATION);
-      const ownerID = `U1`;
+      const { ownerID } = yield take(actions.REQUEST_TASK_CREATION);
       const taskID = uuid();
       yield put(actions.createTask(taskID, groupID, ownerID));
       const { res } = yield axios.post(url + `/task/new`, {
@@ -69,15 +69,41 @@ export function* userAuthenticationSaga() {
       }
       
       console.log('authenticated!', data);
+
       yield put(actions.setState(data.state));
-      yield put(actions.processAuthenticateUser(actions.AUTHENTICATED));
+      yield put(actions.processAuthenticateUser(
+        actions.AUTHENTICATED, 
+        {
+          id: data.state.session.id, // todo... get ID from response
+          token:data.token
+        }
+      ));
+
       history.push('/dashboard');
    
     } catch (e) {
-      console.log("Can't authenticate");
+      console.log("Can't authenticate", e);
       yield put(actions.processAuthenticateUser(actions.NOT_AUTHENTICATED));
       
     }
 
+  }
+}
+
+export function* userCreationSaga() {
+  while(true) {
+    const {username, password} = yield take(actions.REQUEST_CREATE_USER);
+    try {
+      const { data } = yield axios.post(url + '/user/new', {username, password});
+      console.log(data);
+
+      yield put(actions.setState({...data.state,session:{id:data.userID}}));
+      yield put(actions.processAuthenticateUser(actions.AUTHENTICATED));
+      history.push('/dashboard');
+
+    } catch (e) {
+      console.log("Failed to create user", e);
+      yield put(actions.processAuthenticateUser(actions.USERNAME_RESERVED))
+    }
   }
 }
