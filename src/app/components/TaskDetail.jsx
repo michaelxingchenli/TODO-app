@@ -5,6 +5,7 @@ import uuid from 'uuid'
 
 import * as actions from '../store/actions'
 import {ConnectedUsername} from './Username'
+import {ConnectedTaskComments} from './TaskComments'
 
 import { makeStyles } from '@material-ui/core/styles';
 import { Divider, AppBar, Toolbar, Button, TextField, Input, InputLabel, Select, MenuItem, Typography, Container, FormControl } from '@material-ui/core';
@@ -31,10 +32,6 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
 
-  comments: {
-    background: '#f5f6f5',
-  },
-  
   back: {
     float: 'right',
   }
@@ -75,14 +72,13 @@ const TaskDetail = ({
                   <Button 
                     size="medium"
                     variant="outlined" 
-                    color={isComplete ? "default" : "inherit"}
+                    color={isComplete ? "default" : "primary"}
                     onClick={()=> setTaskCompletion(id,  !isComplete)}>
                       {isComplete ? 'Reopen': 'Complete'}
                   </Button>
                   <TextField
                     select
                     label="group"
-                    color="inherit"
                     value={task.group}
                     onChange={setTaskGroup}
                     variant="outlined"
@@ -115,31 +111,8 @@ const TaskDetail = ({
         }
       </Container>
 
-
-      <div className={classes.comments}>
-        <Divider />
-        <Container className={classes.container}>
-          <h3 className="title">Conversation</h3>
-          {comments.map(comment=>(
-              <div key={comment.id}>
-                  <h4><ConnectedUsername id={comment.owner}/> : </h4>
-                  <p>{comment.content}</p>
-              </div>
-          ))}      
-    
-          <form className="form-inline" onSubmit={(e)=>addTaskComment(id,sessionID,e)}>
-              <Input type="text" name="commentContents" autoComplete="off" placeholder="Add a comment" className="form-control"/>
-              <Button 
-                variant="outlined" 
-                color="primary" 
-                type="submit" 
-                className="btn">
-                  Comment
-              </Button>
-          </form>         
-        </Container>
-      </div>
-
+      <ConnectedTaskComments id={id} />
+      
       <Divider />
       <Container className={classes.container}>
         <Link to="/dashboard" className={classes.back}>
